@@ -1,6 +1,6 @@
 const { Router } = require('express')
 const router = Router()
-const cartManager = require('../models/cartManager')
+const CartManager = require('../models/cartManager')
 const cartManager = new CartManager('../data/carts.json')
 const { v4: uuidv4 } = require('uuid')
 

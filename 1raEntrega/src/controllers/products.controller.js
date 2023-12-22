@@ -1,8 +1,8 @@
 const { Router } = require('express')
 const router = Router()
-const productManager = require('../models/productmanager')
+const ProductManager = require('../models/productmanager')
+const productManager = new ProductManager("src/data/products.json")
 const { v4: uuidv4 } = require('uuid') // - plus - importo la biblioteca para autogenerar id's //
-
 
 const products = []    // AHORA APLICO LAS PETICIONES HTTP
 
@@ -42,12 +42,54 @@ router.post('/', (req, res) => {        // este es para agregar un objeto de un 
     res.json({message: 'Producto generado', productId: generatedId})
 })
 
-router.put('', (req, res) => {      // este es para actualizar recursos, en este caso un producto  
+router.put('/:pid', (req, res) => {      // este es para actualizar recursos, en este caso un producto  
+    const productId = req.params.pid
+    const productdata = req.body
 
+    // 1ero.. el producto existe?
+    const existingProduct = productManager.getProductById(productId)
+    if (!existingProduct){
+        return res.status(404).json({error: 'El producto no existe'})
+    }
+
+    // si existe..quiero actualizarlo 
+    if (productdata.title){
+        existingProduct.title = productdata.title
+    }
+    if (productdata.description){
+        existingProduct.description = productdata.description
+    } 
+    if (productdata.code){
+        existingProduct.code = productdata.code
+    } 
+    if (productdata.price){
+        existingProduct.price = productdata.price
+    } 
+    if (productdata.stock){
+        existingProduct.stock = productdata.stock
+    } 
+    if (productdata.category){
+        existingProduct.category = productdata.category
+    } 
+
+    // ahora subo todo lo que actualice 
+    productManager.updateProduct(existingProduct)
+    res.json({ message: 'Producto actualizado', product: existingProduct })
 })
 
-router.delete('', (req, res) => {       // este es para eliminar un recurso, en este caso un producto
+router.delete('/:pid', (req, res) => {       // este es para eliminar un recurso, en este caso un producto
+    const productId = req.params.pid
 
+    // hago lo mismo que en el anterior.. verifico si existe 
+    const existingProduct = productManager.getProductById(productId)
+    if (!existingProduct){
+        return res.status(404).json({error: 'El producto no existe'})
+    }
+
+    // si existe.. lo quiero eliminar
+    productManager.delete(productId)
+
+    res.json({ message: 'Producto eliminado', product: existingProduct })
 })
 
 module.exports = router
