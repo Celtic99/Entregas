@@ -1,4 +1,4 @@
-const ProductModel = require('../dao/models/product.model')
+const ProductModel = require('../Dao/models/product.model')
 const mongoose = require('mongoose')
 
 class productService {
