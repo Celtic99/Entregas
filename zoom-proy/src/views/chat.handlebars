@@ -1,12 +1,12 @@
 <h1>Chats:</h1>
 
+<input type="text" id="input-msj" placeholder="Mandame tu mensaje"> 
+<button id="btn-msj" onclick="sendMessage()"> Enviar </button>
 
-<script src="/socket.io/socket.io.js"></script>
+<div id="container">
 
-<script>
+</div>
 
-    const socket = io(); // Utiliza 'io()' de la biblioteca cargada
+<script src="https://cdn.socket.io/4.7.4/socket.io.min.js"></script>
+<script src="/js/chat.js"></script>
 
-    socket.on("1", ()=>{console.log("recibido")})
-
-</script>

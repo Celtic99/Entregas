@@ -22,7 +22,7 @@ cartRouter.get("/:id", async(req, res) => {
 
         const id = req.params.id;
 
-        const cart = await cartModel.findOne({_id:id});
+        const cart = await cartModel.findOne({_id:id}).populate("products.product");
 
         if(cart.status === false){ throw new Error("El carrito no existe") }
 

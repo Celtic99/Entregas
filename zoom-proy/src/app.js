@@ -2,6 +2,7 @@ import express from "express";
 import connectMongo from "./db/mongo.js";
 import router from "./router/index.js";
 import hbs from "express-handlebars";
+import MessageModel from "./DAO/models/messages.model.js"
 
 import { Server } from "socket.io"
 
@@ -23,8 +24,24 @@ const expressServer = app.listen(8080, () => { console.log("Servidor iniciado") 
 
 const io = new Server(expressServer);
 
-io.on("connection", socket => {
+io.on("connection", (socket) => {
 
-    socket.emit("1")
+    console.log("Conexion WS Establecida!");
+
+    const getMessages = async() => {
+
+        const allMessages = await MessageModel.find();
+        socket.emit("loadMessages", allMessages );
+
+    }
+
+    socket.on("saveMessage", async(msj) => {
+
+        await MessageModel.create(msj);
+        getMessages();
+
+    })
+
+    getMessages();
 
 })
