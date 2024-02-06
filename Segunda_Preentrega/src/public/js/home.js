@@ -1,1 +1,0 @@
-alert("Se activo el js")
